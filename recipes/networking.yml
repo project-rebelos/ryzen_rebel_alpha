@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# Network management - VPN and extra networking tools
+
+type: rpm-ostree
+install:
+  # VPN clients
+  - openvpn
+  - openconnect
+  - wireguard-tools
+  
+  # Network utilities
+  - nfs-utils
+  - cifs-utils
+  - samba-client
+  - fuse-sshfs
+  
+  # DNS tools
+  - dnsmasq

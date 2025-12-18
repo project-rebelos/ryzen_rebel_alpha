@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+---
+# BlueBuild Recipe for CentOS Stream 9 - Lenovo AMD Laptops
+# Target: Lenovo IdeaPad 5 15ALC05 (AMD Ryzen 5500U)
+# DE: Budgie (swap to other DEs by changing the desktop include)
+#
+# Build: bluebuild build ./recipes/recipe.yml
+
+name: centos9-ideapad5-server
+description: CentOS Stream 9 Budgie Desktop for Lenovo IdeaPad 5 15ALC05
+
+base-image: quay.io/centos-bootc/centos-bootc
+image-version: stream9
+
+modules:
+  # ========================================
+  # BASE SYSTEM (shared across all variants)
+  # ========================================
+  - from-file: base-repos.yml
+
+  - from-file: base-system.yml
+
+  - from-file: hardware-amd-laptop.yml
+
+  - from-file: networking.yml
+
+  - from-file: audio-pipewire.yml
+
+  - from-file: power-management.yml
+
+  # ========================================
+  # DESKTOP ENVIRONMENT
+  # Swap this line to change DE:
+  #   desktop-xfce.yml    <- lightweight
+  #   desktop-plasma.yml  <- full-featured
+  #   desktop-gnome.yml   <- modern
+  #   desktop-budgie.yml  <- clean/modern (current)
+  # ========================================
+  - from-file: desktop-budgie.yml
+
+  # ========================================
+  # APPLICATIONS & TOOLS
+  # ========================================
+  - from-file: apps-browser.yml
+
+  - from-file: apps-containers.yml
+
+  - from-file: apps-server.yml
+
+  # Optional - comment out if not needed
+  - from-file: apps-dev.yml
+
+  # ========================================
+  # FINAL CONFIGURATION
+  # ========================================
+  - from-file: system-config.yml

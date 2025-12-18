@@ -1,0 +1,35 @@
+name: BlueBuild
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: "05 10 * * 0"  # Weekly rebuild on Sundays at 10:05 UTC
+  workflow_dispatch:
+
+env:
+  MY_IMAGE_NAME: centos9-ideapad5-server
+  MY_IMAGE_DESC: CentOS Stream 9 Budgie Desktop for Lenovo IdeaPad 5
+
+jobs:
+  build_push:
+    name: Build and Push Image
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build and Push Image
+        uses: blue-build/github-action@v1
+        with:
+          recipe: recipes/recipe.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          # Uncomment to enable rechunking (slower builds, smaller updates)
+          # rechunk: true

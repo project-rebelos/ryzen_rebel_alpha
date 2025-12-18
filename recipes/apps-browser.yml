@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# Web browsers
+
+type: rpm-ostree
+install:
+  # Firefox (standard, works everywhere)
+  - firefox
+  
+  # Chromium (optional - uncomment if needed)
+  # - chromium

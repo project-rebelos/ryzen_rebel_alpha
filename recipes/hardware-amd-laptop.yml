@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# AMD Ryzen laptop support (Radeon graphics, common WiFi cards)
+# Tested: Lenovo IdeaPad 5 15ALC05 (Ryzen 5500U)
+
+type: rpm-ostree
+install:
+  # ----------------------------------------
+  # AMD Graphics (Radeon integrated/discrete)
+  # ----------------------------------------
+  - mesa-dri-drivers
+  - mesa-vulkan-drivers
+  - mesa-va-drivers
+  - mesa-vdpau-drivers
+  - mesa-libGL
+  - mesa-libEGL
+  - mesa-libgbm
+  - mesa-libxatracker
+  
+  # Vulkan
+  - vulkan-loader
+  - vulkan-tools
+  
+  # Video acceleration (VA-API)
+  - libva
+  - libva-utils
+  
+  # AMD GPU monitoring
+  - radeontop
+  
+  # Xorg AMD driver (fallback from Wayland)
+  - xorg-x11-drv-amdgpu
+  
+  # ----------------------------------------
+  # Firmware (AMD + common WiFi/BT)
+  # ----------------------------------------
+  - linux-firmware
+  - amd-gpu-firmware
+  
+  # Intel WiFi (common in Lenovo laptops)
+  - iwl7260-firmware
+  - iwlax2xx-firmware
+  - iwl100-firmware
+  - iwl1000-firmware
+  - iwl105-firmware
+  - iwl135-firmware
+  - iwl2000-firmware
+  - iwl2030-firmware
+  - iwl3160-firmware
+  - iwl3945-firmware
+  - iwl4965-firmware
+  - iwl5000-firmware
+  - iwl5150-firmware
+  - iwl6000-firmware
+  - iwl6000g2a-firmware
+  - iwl6000g2b-firmware
+  - iwl6050-firmware
+  
+  # ----------------------------------------
+  # WiFi & Bluetooth userspace
+  # ----------------------------------------
+  - NetworkManager
+  - NetworkManager-wifi
+  - NetworkManager-bluetooth
+  - NetworkManager-tui
+  - NetworkManager-openvpn
+  - NetworkManager-openconnect
+  - wireless-regdb
+  - crda
+  - iw
+  - wpa_supplicant
+  
+  # Bluetooth
+  - bluez
+  - bluez-tools
+  - bluez-obexd
+  
+  # ----------------------------------------
+  # Input devices
+  # ----------------------------------------
+  - xorg-x11-drv-libinput
+  - libinput
+  
+  # ----------------------------------------
+  # Laptop sensors & misc
+  # ----------------------------------------
+  - iio-sensor-proxy

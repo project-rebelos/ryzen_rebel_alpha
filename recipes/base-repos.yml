@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# Enable CRB and EPEL repositories for CentOS Stream 9
+
+type: script
+scripts:
+  - enable-repos.sh
