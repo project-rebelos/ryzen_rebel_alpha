@@ -1,34 +1,6 @@
-# CentOS Stream 9 BlueBuild Image - Lenovo IdeaPad 5
+# CentOS Stream 10 BlueBuild Image - Lenovo IdeaPad 5
 
-Immutable CentOS Stream 9 desktop image with Budgie DE, built with BlueBuild for AMD Ryzen laptops.
-
-## What Was Fixed
-
-The original project had an incorrect recipe syntax. The error:
-
-```
-ERROR: failed to resolve source metadata for docker.io/modules/audio-pipewire.yml:latest
-```
-
-This happened because:
-
-1. **Wrong syntax**: Used `type: include` with `source:` which doesn't exist in BlueBuild
-2. **Wrong location**: Module files were in `modules/` instead of `recipes/`
-
-### Before (broken)
-```yaml
-modules:
-  - type: include
-    source: modules/audio-pipewire.yml  # ❌ BlueBuild interprets this as a Docker image!
-```
-
-### After (fixed)
-```yaml
-modules:
-  - from-file: audio-pipewire.yml  # ✅ Correct BlueBuild syntax
-```
-
-## Project Structure
+Immutable CentOS Stream 10 image for Lenovo Ideapad 5
 
 ```
 .

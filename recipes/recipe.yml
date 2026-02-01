@@ -6,11 +6,11 @@
 #
 # Build: bluebuild build ./recipes/recipe.yml
 
-name: centos9-ideapad5-plasma
-description: CentOS Stream 9 KDE Plasma Desktop for Lenovo IdeaPad 5 15ALC05
+name: centos10-ideapad5-plasma
+description: CentOS Stream 10 GNOME Desktop for Lenovo IdeaPad 5 15ALC05
 
 base-image: quay.io/centos-bootc/centos-bootc
-image-version: stream9
+image-version: stream10
 
 modules:
   # ========================================
@@ -35,7 +35,7 @@ modules:
   #   desktop-gnome-fixed.yml   <- GNOME 40 (base repos)
   #   desktop-xfce-fixed.yml    <- XFCE (EPEL 9) - lightweight
   # ========================================
-  - from-file: desktop-plasma-fixed.yml
+  - from-file: desktop-gnome.yml
 
   # ========================================
   # APPLICATIONS & TOOLS
