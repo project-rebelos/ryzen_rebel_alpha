@@ -5,7 +5,7 @@
 type: rpm-ostree
 install:
   # Power profiles (GNOME/KDE integrate with this)
-  - power-profiles-daemon
+  - tuned-ppd
   
   # ACPI
   - acpid
