@@ -48,7 +48,6 @@ install:
   - smartmontools
   - hdparm
   - nvme-cli
-  - inxi
   
   # Filesystem tools
   - e2fsprogs
