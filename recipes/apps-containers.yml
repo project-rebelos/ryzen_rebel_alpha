@@ -5,7 +5,6 @@
 type: rpm-ostree
 install:
   - podman
-  - podman-compose
   - buildah
   - skopeo
   - toolbox
