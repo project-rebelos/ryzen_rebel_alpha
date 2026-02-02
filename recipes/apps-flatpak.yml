@@ -1,7 +1,7 @@
-type: default-flatpaks
+type: default-flatpaks@v1
 notify: true
-configurations:
-  - scope: system
-    repo: https://dl.flathub.org/repo/flathub.flatpakrepo
-    install:
-      - io.github.kolunmi.Bazaar
+system:
+  repo-url: https://dl.flathub.org/repo/flathub.flatpakrepo
+  repo-name: flathub
+  install:
+    - io.github.kolunmi.Bazaar
