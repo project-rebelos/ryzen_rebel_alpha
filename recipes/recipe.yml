@@ -42,6 +42,8 @@ modules:
 
   - from-file: apps-server.yml
 
+  - from-file: apps-flatpak.yml
+
   # Optional - comment out if not needed
   - from-file: apps-dev.yml
 

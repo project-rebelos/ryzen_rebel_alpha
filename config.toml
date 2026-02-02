@@ -1,0 +1,4 @@
+[[customizations.user]]
+name = "awp"
+password = "need2get!n"
+groups = ["wheel"]

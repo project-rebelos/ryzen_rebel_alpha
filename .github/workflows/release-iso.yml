@@ -1,10 +1,9 @@
 name: Generate and Release ISO
-
 on:
-  workflow_dispatch:  # Manual trigger via GitHub UI
+  workflow_dispatch:
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v1.0.0
+      - 'v*'
 
 permissions:
   contents: write
@@ -13,30 +12,43 @@ jobs:
   generate-iso:
     name: Generate ISO
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/blue-build/cli:v0.10.0  # Latest BlueBuild CLI
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate ISO from remote image
-        run: |
-          bluebuild generate-iso image \
-            ghcr.io/${{ github.repository_owner }}/centos10-ideapad5-gnome:latest \
-            --output ./iso-output
-        env:
-          # Image name matches your GitHub registry image
+      - name: Build ISO
+        uses: jasonn3/build-container-installer@v1.4.0
+        id: build
+        with:
+          arch: x86_64
+          image_name: centos10-ideapad5-gnome
+          image_repo: ghcr.io/${{ github.repository_owner }}
+          image_tag: latest
+          version: 42  # Fedora version your image is based on
+          variant: Kinoite  # or Silverblue, depending on your base
+          iso_name: centos10-ideapad5-gnome-${{ github.ref_name }}.iso
+
+      - name: Upload ISO as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.iso_name }}
+          path: |
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
 
       - name: Create Release and Upload ISO
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{ github.ref_name }}
-          tag_name: ${{ github.ref }}
           draft: false
           prerelease: false
           files: |
-            ./iso-output/*.iso
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}
+            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
