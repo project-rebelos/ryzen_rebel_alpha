@@ -1,51 +1,435 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 ---
-# BlueBuild Recipe for CentOS Stream 10 - Lenovo AMD Laptops
-# Target: Lenovo IdeaPad 5 15ALC05 (AMD Ryzen 5500U)
-# DE: GNOME 47
+# =============================================================================
+# CentOS Stream 10 macOS-style BlueBuild Recipe
+# =============================================================================
+# This recipe transforms CentOS Stream 10 with GNOME into a macOS-like desktop
+# experience. It uses the centos-bootc base image and applies extensive
+# customizations including WhiteSur themes, dock configurations, and macOS-like
+# application alternatives via Flatpak.
 #
-# Build: bluebuild build ./recipes/recipe.yml
+# IMPORTANT NOTES:
+# - BlueBuild officially supports Fedora Atomic images; CentOS Stream 10 bootc
+#   support is experimental. Some modules may require the dnf module instead
+#   of rpm-ostree for package management on bootc images.
+# - You'll need to create the supporting files referenced in this recipe
+#   (gschema overrides, scripts, etc.) in the appropriate directories.
+# =============================================================================
 
-name: centos10-ideapad5-gnome
-description: CentOS Stream 10 GNOME Desktop for Lenovo IdeaPad 5 15ALC05
+name: centos-macos
+description: CentOS Stream 10 with GNOME customized to look and feel like macOS
 
+# Base image: CentOS Stream 10 bootable container with GNOME
+# Note: This is the official CentOS bootc image. You may need to layer GNOME
+# desktop packages on top if not already included.
 base-image: quay.io/centos-bootc/centos-bootc
 image-version: stream10
 
+# Build for x86_64 (most common, add arm64 if needed)
+platforms:
+  - linux/amd64
+
 modules:
-  # ========================================
-  # BASE SYSTEM
-  # ========================================
-  - from-file: base-repos.yml
+  # ===========================================================================
+  # 1. SIGNING MODULE - Required for image verification
+  # ===========================================================================
+  - type: signing
 
-  - from-file: base-system.yml
+  # ===========================================================================
+  # 2. PACKAGE MANAGEMENT - Install required packages
+  # ===========================================================================
+  # Using dnf module for CentOS Stream 10 bootc compatibility
+  # Note: If dnf module isn't available, use rpm-ostree or containerfile snippets
+  - type: dnf
+    repos:
+      # Enable EPEL for additional packages
+      files:
+        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
+    install:
+      packages:
+        # GNOME Desktop (if not in base image)
+        - gnome-shell
+        - gnome-session
+        - gnome-terminal
+        - gnome-control-center
+        - gnome-tweaks
+        - gnome-shell-extension-user-theme
+        - gnome-shell-extension-appindicator
+        
+        # Theming dependencies
+        - gtk3
+        - gtk4
+        - sassc
+        - glib2-devel
+        - inkscape
+        - optipng
+        
+        # Font rendering improvements
+        - freetype
+        - fontconfig
+        - google-noto-fonts-common
+        - google-noto-sans-fonts
+        - google-noto-serif-fonts
+        - liberation-fonts
+        
+        # macOS-like functionality
+        - plymouth                    # Boot splash
+        - gdm                         # Display manager
+        - NetworkManager              # Network management
+        - bluez                       # Bluetooth
+        - pipewire                    # Modern audio
+        - wireplumber
+        
+        # Development and utilities
+        - git
+        - curl
+        - wget
+        - unzip
+        - jq
+        
+        # Flatpak support
+        - flatpak
+        
+    remove:
+      packages:
+        # Remove packages that conflict with macOS aesthetic
+        - gnome-software-rpm-ostree   # May cause issues on bootc
 
-  - from-file: hardware-amd-laptop.yml
+  # ===========================================================================
+  # 3. FILES MODULE - Copy custom configuration files
+  # ===========================================================================
+  # Create these files in your repository's files/ directory
+  - type: files
+    files:
+      # Plymouth boot theme (macOS-style boot)
+      - source: plymouth/
+        destination: /usr/share/plymouth/themes/macos-style/
+      
+      # GDM/Login customization
+      - source: gdm/
+        destination: /etc/gdm/
+      
+      # System fonts (install San Francisco-like alternatives)
+      - source: fonts/
+        destination: /usr/share/fonts/macos-style/
 
-  - from-file: networking.yml
+  # ===========================================================================
+  # 4. GNOME EXTENSIONS - macOS-like functionality
+  # ===========================================================================
+  - type: gnome-extensions
+    install:
+      # Dash to Dock - macOS-style dock
+      - dash-to-dock@micxgx.gmail.com
+      
+      # User Themes - Enable custom shell themes
+      - user-theme@gnome-shell-extensions.gcampax.github.com
+      
+      # AppIndicator - System tray support (like macOS menu bar)
+      - appindicatorsupport@rgcjonas.gmail.com
+      
+      # Blur My Shell - Transparency effects like macOS
+      - blur-my-shell@aunetx
+      
+      # Just Perfection - Fine-tune GNOME shell appearance
+      - just-perfection-desktop@just-perfection
+      
+      # Clipboard Indicator - Clipboard history
+      - clipboard-indicator@tudmotu.com
+      
+      # Top Bar Organizer - Customize top panel
+      # - top-bar-organizer@julian.gse.jsts.xyz
+      
+      # No overview at startup - Skip activities view
+      - no-overview@fthx
 
-  - from-file: audio-pipewire.yml
+  # ===========================================================================
+  # 5. GSCHEMA OVERRIDES - GNOME default settings for macOS feel
+  # ===========================================================================
+  # Create files/gschema-overrides/zz1-macos.gschema.override with content below
+  - type: gschema-overrides
 
-  - from-file: power-management.yml
+  # ===========================================================================
+  # 6. FLATPAK CONFIGURATION - macOS-like apps from Flathub
+  # ===========================================================================
+  - type: default-flatpaks
+    configurations:
+      - scope: system
+        repo:
+          name: flathub
+          url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        install:
+          # =======================================================
+          # PRODUCTIVITY - macOS App Alternatives
+          # =======================================================
+          # Files (Finder alternative) - Using GNOME Files is fine
+          - org.gnome.Nautilus
+          
+          # Notes (Apple Notes alternative)
+          - org.gnome.Notes
+          
+          # Calendar (Calendar.app alternative)
+          - org.gnome.Calendar
+          
+          # Contacts
+          - org.gnome.Contacts
+          
+          # Calculator
+          - org.gnome.Calculator
+          
+          # Weather
+          - org.gnome.Weather
+          
+          # Maps
+          - org.gnome.Maps
+          
+          # Photos (Photos.app alternative)
+          - org.gnome.Loupe
+          
+          # Music (Music.app alternative)
+          - io.bassi.Amberol
+          
+          # Videos (QuickTime alternative)
+          - io.github.celluloid_player.Celluloid
+          
+          # =======================================================
+          # CREATIVE APPS
+          # =======================================================
+          # Image Editor (Preview/Photos alternative)
+          - org.gimp.GIMP
+          
+          # Vector Graphics (Keynote alternative for graphics)
+          - org.inkscape.Inkscape
+          
+          # Video Editor (iMovie alternative)
+          - org.pitivi.Pitivi
+          
+          # =======================================================
+          # OFFICE - iWork Alternatives
+          # =======================================================
+          # LibreOffice (Pages/Numbers/Keynote alternative)
+          - org.libreoffice.LibreOffice
+          
+          # =======================================================
+          # DEVELOPMENT - Xcode Alternatives
+          # =======================================================
+          # VS Code / VSCodium
+          - com.vscodium.codium
+          
+          # GNOME Builder
+          - org.gnome.Builder
+          
+          # =======================================================
+          # COMMUNICATION
+          # =======================================================
+          # Web Browser (Safari alternative)
+          - org.mozilla.firefox
+          
+          # Or use GNOME Web for more macOS-like experience
+          - org.gnome.Epiphany
+          
+          # Email (Mail.app alternative)
+          - org.gnome.Geary
+          
+          # =======================================================
+          # SYSTEM UTILITIES
+          # =======================================================
+          # System Monitor (Activity Monitor alternative)
+          - io.missioncenter.MissionCenter
+          
+          # Disk Utility alternative
+          - org.gnome.DiskUtility
+          
+          # Archive Manager
+          - org.gnome.FileRoller
+          
+          # Terminal (Terminal.app alternative) - Or use GNOME Console
+          - org.gnome.Console
+          
+          # Text Editor (TextEdit alternative)
+          - org.gnome.TextEditor
+          
+          # PDF Viewer (Preview alternative)
+          - org.gnome.Evince
+          
+          # Screenshot (Screenshot.app alternative)
+          - org.gnome.Screenshot
+          
+          # =======================================================
+          # ENTERTAINMENT
+          # =======================================================
+          # Podcasts
+          - org.gnome.Podcasts
+          
+          # =======================================================
+          # THEMING TOOLS
+          # =======================================================
+          # Flatseal - Manage Flatpak permissions
+          - com.github.tchx84.Flatseal
+          
+          # Extension Manager
+          - com.mattjakeman.ExtensionManager
 
-  # ========================================
-  # DESKTOP ENVIRONMENT - GNOME
-  # ========================================
-  - from-file: desktop-gnome.yml
+  # ===========================================================================
+  # 7. SYSTEMD SERVICES - Enable required services
+  # ===========================================================================
+  - type: systemd
+    system:
+      enabled:
+        - gdm.service
+        - NetworkManager.service
+        - bluetooth.service
+        - flatpak-system-helper.service
+      disabled: []
 
-  # ========================================
-  # APPLICATIONS & TOOLS
-  # ========================================
-  - from-file: apps-browser.yml
+  # ===========================================================================
+  # 8. SCRIPT MODULE - Custom setup scripts
+  # ===========================================================================
+  # This script installs WhiteSur theme and icons
+  - type: script
+    scripts:
+      - install-whitesur-theme.sh
 
-  - from-file: apps-containers.yml
+  # ===========================================================================
+  # 9. FONTS MODULE - Install macOS-like fonts
+  # ===========================================================================
+  - type: fonts
+    fonts:
+      # Google fonts that are similar to Apple's San Francisco
+      google-fonts:
+        - Inter              # Similar to SF Pro
+        - Roboto             # Clean alternative
+        - Source Sans Pro    # Adobe's clean font
+        - JetBrains Mono     # SF Mono alternative for terminals
+        - Fira Code          # Coding font
+      
+      # Nerd fonts for terminal icons
+      nerd-fonts:
+        - FiraCode
+        - JetBrainsMono
 
-  - from-file: apps-server.yml
-
-  # Optional - comment out if not needed
-  - from-file: apps-dev.yml
-
-  # ========================================
-  # FINAL CONFIGURATION
-  # ========================================
-  - from-file: system-config.yml
+# =============================================================================
+# SUPPORTING FILES YOU NEED TO CREATE
+# =============================================================================
+#
+# 1. files/gschema-overrides/zz1-macos.gschema.override
+# ------------------------------------------------------
+# [org.gnome.desktop.interface]
+# gtk-theme='WhiteSur-Dark'
+# icon-theme='WhiteSur-dark'
+# cursor-theme='WhiteSur-cursors'
+# font-name='Inter 11'
+# document-font-name='Inter 11'
+# monospace-font-name='JetBrains Mono 10'
+# color-scheme='prefer-dark'
+# enable-animations=true
+# clock-show-weekday=true
+# 
+# [org.gnome.desktop.wm.preferences]
+# button-layout='close,minimize,maximize:'
+# titlebar-font='Inter Bold 11'
+# 
+# [org.gnome.shell]
+# favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.gnome.Geary.desktop', 'org.gnome.Calendar.desktop', 'com.vscodium.codium.desktop', 'org.gnome.Console.desktop', 'org.gnome.Settings.desktop']
+# 
+# [org.gnome.shell.extensions.dash-to-dock]
+# dock-position='BOTTOM'
+# dock-fixed=true
+# extend-height=false
+# dash-max-icon-size=48
+# custom-theme-shrink=true
+# transparency-mode='DYNAMIC'
+# running-indicator-style='DOTS'
+# show-apps-at-top=false
+# animate-show-apps=true
+# click-action='minimize-or-previews'
+# scroll-action='cycle-windows'
+# 
+# [org.gnome.shell.extensions.blur-my-shell]
+# brightness=0.75
+# sigma=30
+# 
+# [org.gnome.shell.extensions.blur-my-shell.panel]
+# blur=true
+# brightness=0.75
+# 
+# [org.gnome.shell.extensions.just-perfection]
+# panel-in-overview=true
+# search=true
+# show-apps-button=false
+# startup-status=0
+# 
+# [org.gnome.desktop.background]
+# picture-uri='file:///usr/share/backgrounds/macos-ventura.jpg'
+# picture-uri-dark='file:///usr/share/backgrounds/macos-ventura-dark.jpg'
+# 
+# [org.gnome.desktop.screensaver]
+# picture-uri='file:///usr/share/backgrounds/macos-ventura-dark.jpg'
+# 
+# [org.gnome.mutter]
+# center-new-windows=true
+# edge-tiling=true
+# dynamic-workspaces=true
+# 
+# [org.gnome.desktop.peripherals.touchpad]
+# natural-scroll=true
+# tap-to-click=true
+# two-finger-scrolling-enabled=true
+#
+# 2. files/scripts/install-whitesur-theme.sh
+# ------------------------------------------
+# #!/usr/bin/env bash
+# set -euo pipefail
+# 
+# # Install WhiteSur GTK Theme
+# cd /tmp
+# git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git
+# cd WhiteSur-gtk-theme
+# ./install.sh -c dark -c light -o normal -t default -m -N stable
+# ./install.sh -l  # Install for libadwaita
+# 
+# # Install WhiteSur Icon Theme
+# cd /tmp
+# git clone https://github.com/vinceliuice/WhiteSur-icon-theme.git
+# cd WhiteSur-icon-theme
+# ./install.sh -t default
+# 
+# # Install WhiteSur Cursor Theme
+# cd /tmp
+# git clone https://github.com/vinceliuice/WhiteSur-cursors.git
+# cd WhiteSur-cursors
+# ./install.sh
+# 
+# # Cleanup
+# rm -rf /tmp/WhiteSur-*
+#
+# 3. files/backgrounds/ - Add macOS-style wallpapers
+# ---------------------------------------------------
+# Download macOS Ventura/Sonoma wallpapers or similar CC0 alternatives
+#
+# =============================================================================
+# POST-INSTALLATION NOTES
+# =============================================================================
+#
+# After installing this image, users should:
+#
+# 1. Open GNOME Tweaks and verify themes are applied
+# 2. Enable installed GNOME extensions via Extension Manager
+# 3. Configure Dash to Dock settings for optimal macOS experience
+# 4. Set up Flathub remote if not automatically configured:
+#    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#
+# KEYBOARD SHORTCUTS (configure in Settings > Keyboard):
+# - Map Super key to spotlight-like search
+# - Cmd+Space → GNOME Activities/Search
+# - Cmd+Q → Close Window
+# - Cmd+W → Close Tab
+# - Cmd+Tab → Switch Applications
+#
+# KNOWN LIMITATIONS:
+# - LibAdwaita apps (GNOME 43+) may not fully theme with WhiteSur
+# - Some system UI elements may not match perfectly
+# - Mission Control gestures require touchpad configuration
+# - No native AirDrop/Continuity (use KDE Connect or similar)
+# - Time Machine alternative: Timeshift or Pika Backup
+#
+# =============================================================================
