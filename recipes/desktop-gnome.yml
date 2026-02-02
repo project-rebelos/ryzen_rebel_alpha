@@ -22,7 +22,7 @@ modules:
       - adwaita-icon-theme
       - adwaita-cursor-theme
       - ptyxis  # Terminal replacement for gnome-terminal[67][85]
-      - file-roller
+      - ark
       - dejavu-sans-fonts
       - dejavu-serif-fonts
       - dejavu-sans-mono-fonts
