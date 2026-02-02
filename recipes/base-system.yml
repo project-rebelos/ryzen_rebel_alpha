@@ -69,3 +69,6 @@ install:
   # SSH
   - openssh-server
   - openssh-clients
+
+  # App Manager
+  - flatpak
