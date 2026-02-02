@@ -32,11 +32,3 @@ modules:
       - google-noto-emoji-fonts
       - fontconfig
 
-      - type: systemd
-        system:
-          enabled:
-            - gdm
-
-      - type: script
-        scripts:
-          - set-graphical-target.sh
