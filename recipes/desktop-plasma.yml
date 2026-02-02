@@ -1,0 +1,122 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
+---
+# KDE Plasma 5.27 LTS from EPEL 9
+# Full-featured desktop for daily driver use
+
+modules:
+  - type: rpm-ostree
+    install:
+      # ----------------------------------------
+      # Plasma Core
+      # ----------------------------------------
+      - plasma-desktop
+      - plasma-workspace
+      - plasma-nm
+      - plasma-pa
+      - plasma-systemmonitor
+      - plasma-discover
+      - plasma-discover-notifier
+      - plasma-drkonqi
+      - plasma-milou
+      
+      # ----------------------------------------
+      # KDE Frameworks
+      # ----------------------------------------
+      - kf5-kirigami2
+      - kf5-kio
+      - kf5-knotifications
+      
+      # ----------------------------------------
+      # KDE System
+      # ----------------------------------------
+      - sddm
+      - sddm-themes
+      - sddm-breeze
+      - kscreen
+      - kwin
+      - kwin-wayland
+      - kwin-x11
+      - khotkeys
+      - kmenuedit
+      - kinfocenter
+      - ksysguard
+      - kde-settings
+      - kde-settings-plasma
+      - bluedevil
+      - powerdevil
+      - plasma-thunderbolt
+      - plasma-firewall
+      - plasma-vault
+      - plasma-disks
+      
+      # ----------------------------------------
+      # KDE Applications
+      # ----------------------------------------
+      - dolphin
+      - dolphin-plugins
+      - konsole
+      - kate
+      - ark
+      - okular
+      - gwenview
+      - spectacle
+      - kcalc
+      - kcharselect
+      - kcolorchooser
+      - kruler
+      - kwalletmanager5
+      - filelight
+      - partitionmanager
+      
+      # ----------------------------------------
+      # Display server
+      # ----------------------------------------
+      - xorg-x11-server-Xorg
+      - xorg-x11-xinit
+      - xorg-x11-utils
+      - xorg-x11-xauth
+      - xdg-utils
+      - xdg-user-dirs
+      - xdg-desktop-portal
+      - xdg-desktop-portal-kde
+      
+      # Wayland support
+      - plasma-workspace-wayland
+      - kwayland-integration
+      - qt5-qtwayland
+      
+      # ----------------------------------------
+      # Qt/KDE Theming
+      # ----------------------------------------
+      - breeze-icon-theme
+      - breeze-gtk
+      - breeze-cursor-theme
+      - qt5ct
+      
+      # ----------------------------------------
+      # Fonts
+      # ----------------------------------------
+      - dejavu-sans-fonts
+      - dejavu-serif-fonts
+      - dejavu-sans-mono-fonts
+      - liberation-fonts
+      - google-noto-sans-fonts
+      - google-noto-serif-fonts
+      - google-noto-emoji-fonts
+      - fontconfig
+      
+      # ----------------------------------------
+      # Integration packages
+      # ----------------------------------------
+      - plasma-browser-integration
+      - kdeplasma-addons
+      - kdeconnect
+
+  - type: systemd
+    system:
+      enabled:
+        - sddm
+
+  - type: script
+    scripts:
+      - set-graphical-target.sh

@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# Container management tools
+
+type: rpm-ostree
+install:
+  - podman
+  - buildah
+  - skopeo
+  - toolbox

@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+---
+# Server/admin tools - Cockpit, firewall, SELinux
+
+type: rpm-ostree
+install:
+  # Cockpit web management
+  - cockpit
+  - cockpit-storaged
+  - cockpit-networkmanager
+  - cockpit-podman
+  - cockpit-machines
+  - cockpit-sosreport
+  - cockpit-selinux
+  
+  # Firewall
+  - firewalld
+  - firewall-config
+  
+  # SELinux tools
+  - selinux-policy-targeted
+  - policycoreutils
+  - policycoreutils-python-utils
+  - setools-console
+  - setroubleshoot-server
+  
+  # System logging
+  - rsyslog
+  - logrotate
+  
+  # Performance tools
+  - tuned
+  - tuned-profiles-cpu-partitioning
