@@ -7,30 +7,24 @@ install:
   # Version control
   - git
   - git-lfs
-  
-  # Build essentials
+
+  # Build essentials - REMOVED gcc/gcc-c++ due to base image version conflict
   - make
   - cmake
-  - gcc
-  - gcc-c++
   - clang
   - autoconf
   - automake
   - libtool
   - pkgconfig
-  
-  # Python
+
+  # Python - REMOVED python3-virtualenv (EL9 package, needs Python 3.9)
   - python3
   - python3-pip
   - python3-devel
-  - python3-virtualenv
-  
-  # Scripting
-  - ShellCheck
+
+  # Scripting - REMOVED yq (not available), REMOVED ShellCheck (verify availability)
   - jq
-  - yq
-  
-  # Misc
-  - meld
+
+  # Misc - REMOVED meld (EL9 package, needs Python 3.9)
   - diffutils
   - patch
