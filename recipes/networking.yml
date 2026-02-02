@@ -3,17 +3,4 @@
 # Network management - VPN and extra networking tools
 
 type: rpm-ostree
-install:
-  # VPN clients
-  - openvpn
-  - openconnect
-  - wireguard-tools
-  
-  # Network utilities
-  - nfs-utils
-  - cifs-utils
-  - samba-client
-  - sshfs
-  
-  # DNS tools
-  - dnsmasq
+"install": ["libldb-4.23.5-100.el10", "openvpn", "openconnect", "wireguard-tools", "nfs-utils", "cifs-utils", "samba-client", "sshfs", "dnsmasq"]
