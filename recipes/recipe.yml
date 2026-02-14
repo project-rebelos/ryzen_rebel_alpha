@@ -32,7 +32,9 @@ modules:
   # DESKTOP ENVIRONMENT - GNOME
   # ========================================
   - from-file: desktop-gnome.yml
-
+  - type: script
+    scripts:
+      - configure-fonts.sh
   # ========================================
   # APPLICATIONS & TOOLS
   # ========================================
