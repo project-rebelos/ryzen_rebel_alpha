@@ -29,7 +29,7 @@ jobs:
            -v /var/lib/containers/storage:/var/lib/containers/storage \
            quay.io/centos-bootc/bootc-image-builder:latest \
            --type anaconda-iso \
-           ghcr.io/${{ github.repository_owner }}/centos10-ideapad5-gnome:latest
+           ghcr.io/${{ github.repository_owner }}/rebel-ryzen-alpha:latest
 
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4

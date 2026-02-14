@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  MY_IMAGE_NAME: centos9-ideapad5-server
-  MY_IMAGE_DESC: CentOS Stream 9 Budgie Desktop for Lenovo IdeaPad 5
+  MY_IMAGE_NAME: rebel-ryzen-alpha
+  MY_IMAGE_DESC: CentOS Stream 10 GNOME Desktop for Lenovo Ryzen
 
 jobs:
   build_push:
