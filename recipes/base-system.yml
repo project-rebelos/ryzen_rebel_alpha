@@ -6,7 +6,7 @@ type: rpm-ostree
 install:
   # Shell & editors
   - bash-completion
-  - vim-enhanced
+  # - vim-enhanced
   - nano
   - htop
   - btop
