@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "==> Configuring font rendering..."
 mkdir -p /etc/fonts
-cp "$CONFIG_DIRECTORY/files/etc/fonts/local.conf" /etc/fonts/local.conf
+cp /tmp/files/etc/fonts/local.conf /etc/fonts/local.conf
 # Rebuild font cache
 fc-cache -f
 
