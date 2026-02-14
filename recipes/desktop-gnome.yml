@@ -35,4 +35,5 @@ modules:
       - fontconfig
       - tracker
       - tracker-miners
+      - gnome-initial-setup
 

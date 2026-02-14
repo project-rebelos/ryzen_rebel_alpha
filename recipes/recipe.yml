@@ -6,7 +6,7 @@
 #
 # Build: bluebuild build ./recipes/recipe.yml
 
-name: centos10-ideapad5-gnome
+name: rebel-ryzen-alpha
 description: CentOS Stream 10 GNOME Desktop for Lenovo IdeaPad 5 15ALC05
 
 base-image: quay.io/centos-bootc/centos-bootc

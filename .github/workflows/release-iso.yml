@@ -18,16 +18,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.4.0
-        id: build
-        with:
-          arch: x86_64
-          image_name: centos10-ideapad5-gnome
-          image_repo: ghcr.io/${{ github.repository_owner }}
-          image_tag: latest
-          version: 42  # Fedora version your image is based on
-          variant: Kinoite  # or Silverblue, depending on your base
-          iso_name: centos10-ideapad5-gnome-${{ github.ref_name }}.iso
+        run: |
+          mkdir -p output
+          sudo podman run \
+           --rm -it --privileged \
+           --pull=newer \
+           --security-opt label=type:unconfined_t \
+           -v ./config.toml:/config.toml:ro \
+           -v ./output:/output \
+           -v /var/lib/containers/storage:/var/lib/containers/storage \
+           quay.io/centos-bootc/bootc-image-builder:latest \
+           --type anaconda-iso \
+           ghcr.io/${{ github.repository_owner }}/centos10-ideapad5-gnome:latest
 
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4

@@ -1,4 +1,5 @@
-[[customizations.user]]
-name = "awp"
-password = "need2get!n"
-groups = ["wheel"]
+[customizations.installer.kickstart]
+contents = """
+graphical
+network --bootproto=dhcp --device=link --activate --onboot=on
+"""
