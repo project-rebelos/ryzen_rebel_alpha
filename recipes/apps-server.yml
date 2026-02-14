@@ -9,7 +9,7 @@ install:
   - cockpit-storaged
   - cockpit-networkmanager
   - cockpit-podman
-  - cockpit-machines
+  # - cockpit-machines
   - cockpit-sosreport
   - cockpit-selinux
   
