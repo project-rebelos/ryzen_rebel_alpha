@@ -18,12 +18,12 @@ modules:
   # CVE-2025-38001, CVE-2025-38000, CVE-2025-38177
   # sch_hfsc/sch_cake UAF privilege escalation mitigation and blacklisting
   # ========================================
-  - type: containerfile
+  - type: script
     snippets:
-      - RUN echo "blacklist sch_cake" > /etc/modprobe.d/blacklist-sch_cake.conf && \
-            echo "blacklist sch_hfsc" > /etc/modprobe.d/blacklist-sch_hfsc.conf
-
-
+      - |
+        install -d -m 0755 /etc/modprobe.d
+        printf '%s\n' 'blacklist sch_cake' > /etc/modprobe.d/blacklist-sch_cake.conf
+        printf '%s\n' 'blacklist sch_hfsc' > /etc/modprobe.d/blacklist-sch_hfsc.conf
 
   # ========================================
   # BASE SYSTEM
