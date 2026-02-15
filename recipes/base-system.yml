@@ -65,6 +65,9 @@ install:
   - lsof
   - strace
   - sysstat
+  - openscap-scanner
+  - openscap-utils
+  - scap-security-guide
   
   # SSH
   - openssh-server
