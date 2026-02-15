@@ -51,8 +51,6 @@ modules:
   # ========================================
   # APPLICATIONS & TOOLS
   # ========================================
-  - from-file: apps-browser.yml
-
   - from-file: apps-containers.yml
 
   - from-file: apps-server.yml
