@@ -14,6 +14,18 @@ image-version: stream10
 
 modules:
   # ========================================
+  # KERNEL SECURITY UPDATE
+  # CVE-2025-38001, CVE-2025-38000, CVE-2025-38177
+  # sch_hfsc/sch_cake UAF privilege escalation
+  # Requires kernel >= 6.12.32 on the 6.12.x branch
+  # ========================================
+  - type: containerfile
+    snippets:
+      - RUN dnf -y update kernel kernel-core kernel-modules kernel-modules-core && dnf clean all && bootc container lint
+
+
+
+  # ========================================
   # BASE SYSTEM
   # ========================================
   - from-file: base-repos.yml
