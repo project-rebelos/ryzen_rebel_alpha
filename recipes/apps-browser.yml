@@ -2,10 +2,10 @@
 ---
 # Web browsers
 
-type: rpm-ostree
-install:
+# type: rpm-ostree
+# install:
   # Firefox (standard, works everywhere)
-  - firefox
+  # - firefox
   
   # Chromium (optional - uncomment if needed)
   # - chromium

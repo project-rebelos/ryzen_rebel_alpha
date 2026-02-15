@@ -36,4 +36,5 @@ modules:
       - tracker
       - tracker-miners
       - gnome-initial-setup
+      - libsecret
 

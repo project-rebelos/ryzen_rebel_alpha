@@ -47,6 +47,7 @@ modules:
   - type: script
     scripts:
       - configure-fonts.sh
+      - enable-gnome-keyring-pam.sh
   # ========================================
   # APPLICATIONS & TOOLS
   # ========================================
