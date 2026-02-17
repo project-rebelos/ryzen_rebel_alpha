@@ -36,7 +36,7 @@ jobs:
            ghcr.io/project-rebelos/rebel-ryzen-alpha:latest
 
       - name: Compress ISO
-        run: zstd -T0 ./output/bootiso/*.iso -o ./output/bootiso/rebel-ryzen-alpha.iso.zst
+        run: sudo zstd -T0 ./output/bootiso/*.iso -o ./output/bootiso/rebel-ryzen-alpha.iso.zst
 
       - name: Create Release and Upload ISO
         uses: softprops/action-gh-release@v2
