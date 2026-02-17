@@ -35,6 +35,20 @@ jobs:
            --type anaconda-iso \
            ghcr.io/project-rebelos/rebel-ryzen-alpha:latest
 
+      - name: Compress ISO
+        run: zstd -T0 ./output/bootiso/*.iso -o ./output/bootiso/rebel-ryzen-alpha.iso.zst
+
+      - name: Create Release and Upload ISO
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: ./output/bootiso/rebel-ryzen-alpha.iso.zst
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4
         with:
