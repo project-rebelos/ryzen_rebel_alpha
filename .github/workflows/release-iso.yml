@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 jobs:
   generate-iso:
@@ -17,11 +18,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Pull image
+        run: sudo podman pull ghcr.io/project-rebelos/rebel-ryzen-alpha:latest
+
       - name: Build ISO
         run: |
           mkdir -p output
           sudo podman run \
-           --rm -it --privileged \
+           --rm --privileged \
            --pull=newer \
            --security-opt label=type:unconfined_t \
            -v ./config.toml:/config.toml:ro \
@@ -29,15 +33,13 @@ jobs:
            -v /var/lib/containers/storage:/var/lib/containers/storage \
            quay.io/centos-bootc/bootc-image-builder:latest \
            --type anaconda-iso \
-           ghcr.io/${{ github.repository_owner }}/rebel-ryzen-alpha:latest
+           ghcr.io/project-rebelos/rebel-ryzen-alpha:latest
 
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.iso_name }}
-          path: |
-            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}
-            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM
+          name: rebel-ryzen-alpha-iso
+          path: ./output/bootiso/*
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
@@ -49,8 +51,6 @@ jobs:
           name: ${{ github.ref_name }}
           draft: false
           prerelease: false
-          files: |
-            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}
-            ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM
+          files: ./output/bootiso/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
